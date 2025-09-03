@@ -1,0 +1,49 @@
+:host {
+  display: block;
+  margin: 1rem 0;
+}
+
+:host::part(input) {
+  --md-filled-text-field-container-color: white;
+  --md-filled-text-field-focus-label-text-color: #6200ee;
+  --md-filled-text-field-focus-active-indicator-color: #6200ee;
+  --md-filled-text-field-input-text-color: black;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+.form-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+input {
+  padding: 0.5rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus {
+  border-color: #6200ee; 
+  outline: none;
+}
+
+input.invalid {
+  border-color: #d32f2f; 
+  box-shadow: 0 0 0 1px #d32f2f;
+}
+
+.error-text {
+  color: #d32f2f;
+  font-size: 0.8rem;
+  margin-top: 0.25rem;
+}

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Stencil Form Input Demo</title>
+    <script type="module" src="/build/validation-service.esm.js"></script>
+    <script nomodule src="/build/validation-service.js"></script>
+
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background: #f9f9f9;
+        padding: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+      }
+      .form-container {
+        max-width: 400px;
+        min-width: 250px;
+        padding: 2rem;
+        background: #fff;
+        border-radius: 10px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+      .btn {
+        padding: 10px;
+        border-radius: 10px;
+        font-size: large;
+        border: none;
+        margin-top: 1rem;
+      }
+      .btn:hover {
+        background-color: #c3a0f4;
+        color: #f9f9f9;
+      }
+      .email-list {
+        margin-top: 2rem;
+        padding: 0;
+        list-style: none;
+      }
+      .email-list li {
+        background: #f1f1f1;
+        max-width: 500px;
+        margin: 5px 0;
+        padding: 8px;
+        border-radius: 6px;
+        font-size: 14px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="form-container">
+      <h2>Register</h2>
+
+      <stencil-form-input label="Email" type="email" validation-regex="^[^@]+@[^@]+\.[^@]+$"></stencil-form-input>
+
+      <stencil-form-input label="Password" type="password" validation-regex="^(?=.*[A-Z])(?=.*\d).{8,}$">
+        <span slot="label">Password (must include uppercase & number)</span>
+      </stencil-form-input>
+
+      <button class="btn">Submit</button>
+
+    </div>
+    <div class="Registered">
+
+      <h3>Registered Emails</h3>
+      <ul id="emailList" class="email-list"></ul>
+    </div>
+
+    <script>
+      let emailValid = false;
+      let passwordValid = false;
+      let emailValue = '';
+      let passwordValue = '';
+
+      const emailInput = document.querySelector('stencil-form-input[label="Email"]');
+      const passwordInput = document.querySelector('stencil-form-input[label="Password"]');
+      const emailList = document.getElementById('emailList');
+
+      // Capture values & validation
+      emailInput.addEventListener('valueChange', e => {
+        emailValue = e.detail;
+      });
+      emailInput.addEventListener('validityChange', e => {
+        emailValid = e.detail;
+      });
+
+      passwordInput.addEventListener('valueChange', e => {
+        passwordValue = e.detail;
+      });
+      passwordInput.addEventListener('validityChange', e => {
+        passwordValid = e.detail;
+      });
+
+      function renderEmails() {
+        emailList.innerHTML = '';
+        const users = JSON.parse(localStorage.getItem('users')) || [];
+        users.forEach(user => {
+          const li = document.createElement('li');
+          li.textContent = user.email;
+          emailList.appendChild(li);
+        });
+      }
+
+      const btn = document.querySelector('.btn');
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+
+        if (!emailValid) {
+          alert('Email is not valid!');
+          return;
+        }
+
+        if (!passwordValid) {
+          alert('Password must have at least 8 characters, one uppercase letter, and one number.');
+          return;
+        }
+
+        const newUser = {
+          email: emailValue,
+          password: passwordValue,
+        };
+
+        let users = JSON.parse(localStorage.getItem('users')) || [];
+        users.push(newUser);
+        localStorage.setItem('users', JSON.stringify(users));
+
+        alert('Data saved successfully!');
+
+        renderEmails();
+      });
+
+      renderEmails();
+    </script>
+  </body>
+</html>
